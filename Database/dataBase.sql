@@ -54,3 +54,12 @@ CREATE TABLE Article_Tags (
     FOREIGN KEY (idA) REFERENCES Articles(id) ON DELETE CASCADE,
     FOREIGN KEY (idT) REFERENCES Tags(id) ON DELETE CASCADE
 );
+
+-- Table Article_Categories
+CREATE TABLE Article_Categories (
+    articleId INT NOT NULL,
+    categoryId INT NOT NULL,
+    PRIMARY KEY (articleId, categoryId),
+    FOREIGN KEY (articleId) REFERENCES Articles(id) ON DELETE CASCADE,
+    FOREIGN KEY (categoryId) REFERENCES Categories(id) ON DELETE CASCADE
+);
