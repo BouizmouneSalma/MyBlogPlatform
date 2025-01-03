@@ -33,3 +33,9 @@ CREATE TABLE Comments (
     FOREIGN KEY (userId) REFERENCES Users(id) ON DELETE SET NULL,
     FOREIGN KEY (articleId) REFERENCES Articles(id) ON DELETE CASCADE
 );
+
+-- Table Categories
+CREATE TABLE Categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
