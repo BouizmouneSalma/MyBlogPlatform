@@ -63,3 +63,12 @@ CREATE TABLE Article_Categories (
     FOREIGN KEY (articleId) REFERENCES Articles(id) ON DELETE CASCADE,
     FOREIGN KEY (categoryId) REFERENCES Categories(id) ON DELETE CASCADE
 );
+INSERT INTO Users (username, email, password, role) VALUES
+('admin', 'admin@example.com', 'hashed_password', 'admin'),
+('user1', 'user1@example.com', 'hashed_password', 'user');
+
+INSERT INTO Categories (name) VALUES
+('Tech'), ('Health'), ('Education');
+
+INSERT INTO Tags (name) VALUES
+('PHP'), ('MySQL'), ('HTML'), ('CSS');
