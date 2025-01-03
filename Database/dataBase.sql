@@ -21,3 +21,15 @@ CREATE TABLE Articles (
     userId INT NOT NULL,
     FOREIGN KEY (userId) REFERENCES Users(id) ON DELETE CASCADE
 );
+
+-- Table Comments
+CREATE TABLE Comments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    content TEXT NOT NULL,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updatedAt DATETIME NULL,
+    userId INT,
+    articleId INT NOT NULL,
+    FOREIGN KEY (userId) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (articleId) REFERENCES Articles(id) ON DELETE CASCADE
+);
