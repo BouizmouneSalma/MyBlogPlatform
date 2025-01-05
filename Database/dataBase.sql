@@ -1,74 +1,73 @@
-CREATE DATABASE ProjetGestionArticles;
-USE ProjetGestionArticles;
+CREATE DATABASE ProjetGestionBlog;
+USE ProjetGestionBlog;
 
--- Table Users
-CREATE TABLE Users (
+CREATE TABLE roles (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    role ENUM('user', 'admin') DEFAULT 'user'
+    name VARCHAR(50) NOT NULL
 );
 
--- Table Articles
-CREATE TABLE Articles (
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role_id INT NOT NULL,
+    FOREIGN KEY (role_id) REFERENCES roles(id)
+);
+
+CREATE TABLE articles (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     image VARCHAR(255),
-    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    userId INT NOT NULL,
-    FOREIGN KEY (userId) REFERENCES Users(id) ON DELETE CASCADE
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    user_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- Table Comments
-CREATE TABLE Comments (
+CREATE TABLE tags (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE article_tags (
+    article_id INT NOT NULL,
+    tag_id INT NOT NULL,
+    PRIMARY KEY (article_id, tag_id),
+    FOREIGN KEY (article_id) REFERENCES articles(id),
+    FOREIGN KEY (tag_id) REFERENCES tags(id)
+);
+
+CREATE TABLE comments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     content TEXT NOT NULL,
-    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updatedAt DATETIME NULL,
-    userId INT,
-    articleId INT NOT NULL,
-    FOREIGN KEY (userId) REFERENCES Users(id) ON DELETE SET NULL,
-    FOREIGN KEY (articleId) REFERENCES Articles(id) ON DELETE CASCADE
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    user_id INT,
+    article_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (article_id) REFERENCES articles(id)
 );
 
--- Table Categories
-CREATE TABLE Categories (
+CREATE TABLE likes (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE
+    user_id INT NOT NULL,
+    article_id INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, article_id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (article_id) REFERENCES articles(id)
 );
 
--- Table Tags
-CREATE TABLE Tags (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE
-);
+INSERT INTO roles (name) VALUES ('Admin'), ('User');
 
--- Table Article_Tags
-CREATE TABLE Article_Tags (
-    idA INT NOT NULL,
-    idT INT NOT NULL,
-    PRIMARY KEY (idA, idT),
-    FOREIGN KEY (idA) REFERENCES Articles(id) ON DELETE CASCADE,
-    FOREIGN KEY (idT) REFERENCES Tags(id) ON DELETE CASCADE
-);
-
--- Table Article_Categories
-CREATE TABLE Article_Categories (
-    articleId INT NOT NULL,
-    categoryId INT NOT NULL,
-    PRIMARY KEY (articleId, categoryId),
-    FOREIGN KEY (articleId) REFERENCES Articles(id) ON DELETE CASCADE,
-    FOREIGN KEY (categoryId) REFERENCES Categories(id) ON DELETE CASCADE
-);
-INSERT INTO Users (username, email, password, role) VALUES
-('admin', 'admin@example.com', 'hashed_password', 'admin'),
-('user1', 'user1@example.com', 'hashed_password', 'user');
-
-INSERT INTO Categories (name) VALUES
-('Tech'), ('Health'), ('Education');
-
-INSERT INTO Tags (name) VALUES
-('PHP'), ('MySQL'), ('HTML'), ('CSS');
+INSERT INTO tags (name) VALUES 
+    ('Technology'),
+    ('Lifestyle'),
+    ('Education'),
+    ('Travel'),
+    ('Health'),
+    ('Sports'),
+    ('Finance'),
+    ('Entertainment'),
+    ('Food'),
+    ('Science');
